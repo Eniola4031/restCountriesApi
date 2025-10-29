@@ -11,11 +11,11 @@ import { refreshCountries,
 const countryRouter = express.Router();
 
 countryRouter.post('/countries/refresh', refreshCountries);
+countryRouter.get('/countries/image', getSummaryImage);   
 countryRouter.get('/countries/', getAllCountries);
 countryRouter.get('/countries/:name', getCountryByName);
 countryRouter.delete('/countries/:name', deleteCountryByName);
 countryRouter.get('/status', getStatus);  
-countryRouter.get('/countries/image', getSummaryImage);   
 
 
 
