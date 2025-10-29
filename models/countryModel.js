@@ -1,4 +1,4 @@
-import { pool } from '../config/db';
+import pool from '../config/db.js';
 
 export const createTable = async () => {
   const query = `
@@ -75,4 +75,24 @@ export const getCountries = async (filters) => {
 
   const { rows } = await pool.query(baseQuery, values);
   return rows;
+};
+export const getCountryByNameModel = async (name) => {
+  const result = await pool.query('SELECT * FROM countries WHERE name = $1', [name]);
+  return result.rows[0];
+};
+
+export const deleteCountryByNameModel = async (name) => {
+  const result = await pool.query('DELETE FROM countries WHERE name = $1', [name]);
+  return result.rowCount; // returns 1 if deleted, 0 if not found
+};
+// Get total number of countries
+export const getCountryCount = async () => {
+  const result = await pool.query('SELECT COUNT(*) AS count FROM countries');
+  return parseInt(result.rows[0].count);
+};
+
+// Get last refresh timestamp
+export const getLastRefreshTime = async () => {
+  const result = await pool.query('SELECT MAX(last_refreshed_at) AS last_refreshed_at FROM countries');
+  return result.rows[0].last_refreshed_at;
 };

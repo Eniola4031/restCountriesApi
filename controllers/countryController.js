@@ -1,5 +1,11 @@
 import axios from 'axios';
-import { insertCountries, getCountries } from '../models/countryModel.js';
+import { insertCountries,
+   getCountries,
+    getCountryByNameModel,
+     deleteCountryByNameModel,
+      getCountryCount, 
+  getLastRefreshTime
+  } from '../models/countryModel.js';
 import { randomBetween } from '../utils/helpers.js';
 
 export const refreshCountries = async (req, res) => {
@@ -50,4 +56,54 @@ export const getAllCountries = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: 'Failed to get countries' });
   }
+
 };
+// Get one country by name
+export const getCountryByName = async (req, res) => {
+  try {
+    const { name } = req.params;
+    const country = await getCountryByNameModel(name); // model function
+    
+    if (!country) {
+      return res.status(404).json({ error: 'Country not found' });
+    }
+    
+    res.json(country);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get country' });
+  }
+};
+
+// Delete a country by name
+export const deleteCountryByName = async (req, res) => {
+  try {
+    const { name } = req.params;
+    const deleted = await deleteCountryByNameModel(name); // model function
+    
+    if (deleted === 0) {
+      return res.status(404).json({ error: 'Country not found' });
+    }
+
+    res.json({ message: `${name} deleted successfully` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to delete country' });
+  }
+};
+
+export const getStatus = async (req, res) => {
+  try {
+    const total_countries = await getCountryCount();
+    const last_refreshed_at = await getLastRefreshTime();
+
+    res.json({
+      total_countries,
+      last_refreshed_at: last_refreshed_at || 'No refresh yet',
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get status' });
+  }
+};
+
