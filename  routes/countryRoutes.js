@@ -15,7 +15,7 @@ countryRouter.get('/countries/', getAllCountries);
 countryRouter.get('/countries/:name', getCountryByName);
 countryRouter.delete('/countries/:name', deleteCountryByName);
 countryRouter.get('/status', getStatus);  
-countryRouter.get('countries/image', getSummaryImage);   
+countryRouter.get('/countries/image', getSummaryImage);   
 
 
 
